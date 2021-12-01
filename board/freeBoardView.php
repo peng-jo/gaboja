@@ -11,13 +11,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>게시글</title>
   <!-- style -->
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="../assets/css/w3c.css">
   <link rel="stylesheet" href="../assets/css/fonts.css">
   <link rel="stylesheet" href="../assets/css/var.css">
   <link rel="stylesheet" href="../assets/css/reset.css">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <style>
-  </style>
+
 </head>
 <body>
     <div id="skip">
@@ -39,18 +38,16 @@
                     <table>
                         <thead>
                             <?php
-                                $postSession = $_SESSION['myMemberID'];
+                                $postSessions = $_SESSION['myMemberID'];
                                 $boardID = $_GET['boardID'];
                                 $sql = "SELECT b.boardTitle ,b.boardContent, b.boardView, b.boardLike, b.regTime, b.myMemberID, m.youName, m.youScore, m.youImg, m.youIntro FROM gBoard b JOIN gmember m ON (b.myMemberID = m.myMemberID) WHERE b.myBoardID = ${boardID}";
                                 $result = $connect -> query($sql);
                                 $info = $result -> fetch_array(MYSQLI_ASSOC);
-                                
                             ?>
    
                             <?php 
                                 $view = "UPDATE gBoard SET boardView = boardView + 1 WHERE myBoardID = {$boardID}";
                                 $cn = $connect -> query($view);
-
                                 echo "<tr>";
                                 echo "<th style='width: 10%'>".$info['youName']."</th>";
                                 echo "<th style='width: 70%'>".date('Y-m-d  H:i:s', $info['regTime'])."</th>";
@@ -58,7 +55,6 @@
                                 echo "<th style='width: 10%'> 추천수 : ".$info['boardLike'] ."</th>";
                                 echo "</tr>";
                             ?>
-
                             
                             <!-- <tr>
                                 <th style="width: 10%">작성자</th>
@@ -68,7 +64,7 @@
                             </tr> -->
                         </thead>
                     </table>
-                    <div>
+                    <div class="fViewText">
                         <?php 
                             echo "<h2>".$info['boardTitle']."</h2>";
                             echo "<p>".$info['boardContent']."</p>";
@@ -88,8 +84,7 @@
                     </div>
                 </div>
                 <div class="fViewbtn">
-                    <!-- <a href="./freeBoardModify.php">수정하기</a> -->
-                    <? echo "<a href='./freeBoardModify.php?boardID=".$boardID."'>수정하기</a>" ?>
+                    <? echo "<a href='./freeBoardModify.php?boardID={$boardID}'>수정하기</a>";?>
                     <?
                         if( isset($_SESSION['myMemberID']) ){
                             echo "<a href='#' class='cf__js'>삭제하기</a>";
@@ -99,8 +94,16 @@
                     <a href="./freeBoard.php">목록보기</a>
                 </div>
                 <section class="memberInfo">
-                    <? 
-                        echo "<img src=../assets/img/".$info['youImg']." alt='프로필 사진'>";
+                    <?       
+                        $sql2 = "SELECT image FROM gmember WHERE myMemberID = {$info['myMemberID']}"; 
+                        $result2 = $connect->query($sql2);
+                        $info2 = $result2 -> fetch_array(MYSQLI_ASSOC);
+                        if( !$info2['image'] ){ //프로필 사진을 적용 안했을때 사용할 기본이미지 사진 
+                            echo "<img src='../assets/img/m0.jpg' alt='프로필 사진'>";
+                        } else { //프로필 사진을 적용했을때 나오는 사진
+                            echo "<img src='data:image/jpeg; base64,".base64_encode( $info2['image'] )."'/>";
+                        }
+
                     ?>
                     <!-- <img src="../assets/img/memberProfile01.jpg" alt="프로필사진"> -->
                     <div class="memScore">
@@ -178,7 +181,6 @@
                                             echo "<a href='../comment/commentLike.php?like=like&memberID=".$info['myMemberID']."&commentID=".$info['myCommentID']."' class='commentBtn like'>추천</a>";
                                         }
                                         
-
                                         
                                         echo "<div class='commentInfo'>";
                                             echo "<span>".date('Y-m-d H:i:s',$info['regTime'])."</span>";
@@ -245,8 +247,6 @@
         });
         }
         
-       
-        
         let temp = document.querySelector('.temp');
         let temp2 = document.querySelector('.temp2');
         const temper = parseInt(temp.innerText.match(/\d+/));
@@ -259,9 +259,6 @@
                 temp.style.color = 'red';
                 outer.classList.remove('w3-green');
                 outer.classList.add('w3-red');
-
- 
-                
                 //37 보다 클때 레드   
             } else if ( temper < 36){
                 //37 보다 클때 36보다 작을때 블루
@@ -271,7 +268,6 @@
                 outer.classList.add('w3-blue');
             }
         }
-       
     </script>
 </body>
 </html>

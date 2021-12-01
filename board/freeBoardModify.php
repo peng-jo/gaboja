@@ -43,7 +43,6 @@
                                             $boardID = $_GET['boardID'];
                                             $myMemberID = $_SESSION['myMemberID'];
                                             
-                                            
                                             $sql = "SELECT myMemberID, myBoardID from gBoard where myMemberID = ${myMemberID} AND myBoardID = ${boardID}";                                        
                                             $sql2 = "SELECT b.boardTitle, b.boardContent, m.youName FROM gBoard b JOIN gmember m ON (b.myMemberID = m.myMemberID) WHERE b.myBoardID = ${boardID}";
                                             
